@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net462;net48;net5.0;net6.0;net7.0</TargetFrameworks>
+    <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Simple class containing start time, end time, and total time.</Title>
+    <Authors>Joel Christner</Authors>
+    <Description>Simple class containing start time, end time, and total time.</Description>
+    <Copyright>(c)2023 Joel Christner</Copyright>
+    <PackageProjectUrl>https://github.com/jchristn/timestamps</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/jchristn/timestamps</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>time timestamp stopwatch</PackageTags>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Assets\logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
