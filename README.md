@@ -1,4 +1,4 @@
-﻿![supersimpletcp](https://github.com/jchristn/supersimpletcp/blob/master/assets/icon.ico)
+﻿![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
 
 # Timestamps
 
