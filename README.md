@@ -26,6 +26,7 @@ void Main(string[] args)
   ts.Start = DateTime.UtcNow;
   ts.End = DateTime.UtcNow.AddSeconds(10);
   Console.WriteLine("Total milliseconds: " + ts.TotalMs + "ms");
+}
 ```
 
 ## Version History
