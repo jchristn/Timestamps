@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Timestamps
 {
@@ -14,8 +12,7 @@ namespace Timestamps
         /// <summary>
         /// The time at which the operation started.
         /// </summary>
-        [JsonPropertyOrder(1)]
-        public DateTime? Start
+        public DateTime Start
         {
             get
             {
@@ -23,26 +20,11 @@ namespace Timestamps
             }
             set
             {
-                if (value == null)
-                {
-                    _Start = null;
-                    _End = null;
-                    _TotalMs = null;
-                }
-                else
-                {
-                    _Start = Convert.ToDateTime(value).ToUniversalTime();
+                _Start = Convert.ToDateTime(value).ToUniversalTime();
 
-                    if (_End != null)
-                    {
-                        if (_Start.Value > _End.Value)
-                        {
-                            _Start = null;
-                            throw new ArgumentException("Start time must be before end time.");
-                        }
-
-                        _TotalMs = Math.Round(TotalMsBetween(_Start.Value, _End.Value), 2);
-                    }
+                if (_End != null)
+                {
+                    if (_Start > _End.Value) throw new ArgumentException("Start time must be before end time.");
                 }
             }
         }
@@ -50,7 +32,6 @@ namespace Timestamps
         /// <summary>
         /// The time at which the operation ended.
         /// </summary>
-        [JsonPropertyOrder(2)]
         public DateTime? End
         {
             get
@@ -62,22 +43,11 @@ namespace Timestamps
                 if (value == null)
                 {
                     _End = null;
-                    _TotalMs = null;
                 }
                 else
                 {
+                    if (value < _Start) throw new ArgumentException("End time must be after start time.");
                     _End = Convert.ToDateTime(value).ToUniversalTime();
-
-                    if (_Start != null)
-                    {
-                        if (_End.Value < _Start.Value)
-                        {
-                            _Start = null;
-                            throw new ArgumentException("End time must be after start time.");
-                        }
-
-                        _TotalMs = Math.Round(TotalMsBetween(_Start.Value, _End.Value), 2);
-                    }
                 }
             }
         }
@@ -85,12 +55,18 @@ namespace Timestamps
         /// <summary>
         /// The total number of milliseconds that transpired between Start and End.
         /// </summary>
-        [JsonPropertyOrder(3)]
         public double? TotalMs
         {
             get
             {
-                return _TotalMs;
+                if (_End == null)
+                {
+                    return Math.Round(TotalMsBetween(_Start, DateTime.UtcNow), 2);
+                }
+                else
+                {
+                    return Math.Round(TotalMsBetween(_Start, _End.Value), 2);
+                }
             }
         }
 
@@ -98,9 +74,8 @@ namespace Timestamps
 
         #region Private-Members
 
-        private DateTime? _Start = null;
+        private DateTime _Start = DateTime.UtcNow;
         private DateTime? _End = null;
-        private double? _TotalMs = null;
 
         #endregion
 
@@ -111,9 +86,7 @@ namespace Timestamps
         /// </summary>
         public Timestamp()
         {
-            _Start = DateTime.UtcNow;
-            _End = null;
-            _TotalMs = null;
+
         }
 
         #endregion

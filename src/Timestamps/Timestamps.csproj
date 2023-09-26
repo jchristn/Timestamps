@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;netcoreapp3.1;net461;net462;net48;net5.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.1;net462;net48;net6.0;net7.0</TargetFrameworks>
 		<ApplicationIcon>Assets\logo.ico</ApplicationIcon>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Simple class containing start time, end time, and total time.</Title>
 		<Authors>Joel Christner</Authors>
 		<Description>Simple class containing start time, end time, and total time.</Description>
 		<Copyright>(c)2023 Joel Christner</Copyright>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<PackageProjectUrl>https://github.com/jchristn/timestamps</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/jchristn/timestamps</RepositoryUrl>
@@ -21,10 +21,6 @@
 
 	<ItemGroup>
 		<Content Include="Assets\logo.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="7.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
