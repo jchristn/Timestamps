@@ -26,6 +26,14 @@ void Main(string[] args)
   ts.Start = DateTime.UtcNow;
   ts.End = DateTime.UtcNow.AddSeconds(10);
   Console.WriteLine("Total milliseconds: " + ts.TotalMs + "ms");
+
+  // add log messages
+  ts.AddMessage("Hello, world!");
+  ts.AddMessage("Hello, but a different world!");
+  Dictionary<DateTime, string> messages = ts.Messages;
+
+  // add metadata
+  ts.Metadata = myObject; // anything you like
 }
 ```
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using GetSomeInput;
 using Timestamps;
 
@@ -7,10 +9,10 @@ namespace Test
     public static class Program
     {
         private static bool _RunForever = true;
+        private static Timestamp _Timestamp = new();
 
         public static void Main()
         {
-            Timestamp ts = new();
 
             while (_RunForever)
             {
@@ -29,13 +31,19 @@ namespace Test
                         Menu();
                         break;
                     case "ms":
-                        Console.WriteLine(ts.TotalMs + "ms");
+                        Console.WriteLine(_Timestamp.TotalMs + "ms");
                         break;
                     case "end":
-                        ts.End = DateTime.UtcNow;
+                        _Timestamp.End = DateTime.UtcNow;
                         break;
                     case "clear":
-                        ts.End = null;
+                        _Timestamp.End = null;
+                        break;
+                    case "add":
+                        AddMessage();
+                        break;
+                    case "msg":
+                        ShowMessages();
                         break;
                 }
             }
@@ -51,6 +59,28 @@ namespace Test
             Console.WriteLine("  ms       Total milliseconds from now (or defined end)");
             Console.WriteLine("  end      Set end to UTC now");
             Console.WriteLine("  clear    Clear end time");
+            Console.WriteLine("  add      Add a message");
+            Console.WriteLine("  msg      Show messages");
+            Console.WriteLine("");
+        }
+
+        private static void AddMessage()
+        {
+            string msg = Inputty.GetString("Message:", null, true);
+            if (String.IsNullOrEmpty(msg)) return;
+            _Timestamp.AddMessage(msg);
+        }
+
+        private static void ShowMessages()
+        {
+            Dictionary<DateTime, string> messages = _Timestamp.Messages;
+
+            Console.WriteLine("");
+            Console.WriteLine(messages.Count + " messages");
+            foreach (KeyValuePair<DateTime, string> msg in messages)
+            {
+                Console.WriteLine("| " + msg.Key.ToString("yyyy-MM-dd HH:mm:ss.ffffffZ") + ": " + msg.Value);
+            }
             Console.WriteLine("");
         }
     }

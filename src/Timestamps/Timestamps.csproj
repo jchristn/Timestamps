@@ -8,7 +8,7 @@
 		<Authors>Joel Christner</Authors>
 		<Description>Simple class containing start time, end time, and total time.</Description>
 		<Copyright>(c)2023 Joel Christner</Copyright>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<PackageProjectUrl>https://github.com/jchristn/timestamps</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/jchristn/timestamps</RepositoryUrl>
@@ -17,6 +17,10 @@
 		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>C:\Code\Misc\Timestamps\src\timestamps.snk</AssemblyOriginatorKeyFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,6 +28,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Include="..\..\LICENSE.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Include="Assets\logo.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
