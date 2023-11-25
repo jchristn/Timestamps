@@ -21,7 +21,7 @@ namespace Timestamps
             }
             set
             {
-                _Start = Convert.ToDateTime(value).ToUniversalTime();
+                _Start = value.ToUniversalTime();
 
                 if (_End != null)
                 {
@@ -48,7 +48,7 @@ namespace Timestamps
                 else
                 {
                     if (value < _Start) throw new ArgumentException("End time must be after start time.");
-                    _End = Convert.ToDateTime(value).ToUniversalTime();
+                    _End = value.Value.ToUniversalTime();
                 }
             }
         }
