@@ -11,47 +11,14 @@ namespace Timestamps
         #region Public-Members
 
         /// <summary>
-        /// The time at which the operation started.
+        /// The time at which the operation started.  When instantiated, this is set to DateTime.UtcNow.
         /// </summary>
-        public DateTime Start
-        {
-            get
-            {
-                return _Start;
-            }
-            set
-            {
-                _Start = value.ToUniversalTime();
-
-                if (_End != null)
-                {
-                    if (_Start > _End.Value) throw new ArgumentException("Start time must be before end time.");
-                }
-            }
-        }
+        public DateTime Start { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// The time at which the operation ended.
         /// </summary>
-        public DateTime? End
-        {
-            get
-            {
-                return _End;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _End = null;
-                }
-                else
-                {
-                    if (value < _Start) throw new ArgumentException("End time must be after start time.");
-                    _End = value.Value.ToUniversalTime();
-                }
-            }
-        }
+        public DateTime? End { get; set; } = null;
 
         /// <summary>
         /// The total number of milliseconds that transpired between Start and End.
@@ -60,13 +27,13 @@ namespace Timestamps
         {
             get
             {
-                if (_End == null)
+                if (End == null)
                 {
-                    return Math.Round(TotalMsBetween(_Start, DateTime.UtcNow), 2);
+                    return Math.Round(TotalMsBetween(Start, DateTime.UtcNow), 2);
                 }
                 else
                 {
-                    return Math.Round(TotalMsBetween(_Start, _End.Value), 2);
+                    return Math.Round(TotalMsBetween(Start, End.Value), 2);
                 }
             }
         }
@@ -104,8 +71,6 @@ namespace Timestamps
 
         #region Private-Members
 
-        private DateTime _Start = DateTime.UtcNow;
-        private DateTime? _End = null;
         private readonly object _Lock = new object();
         private Dictionary<DateTime, string> _Messages = new Dictionary<DateTime, string>();
         private object _Metadata = null;
@@ -154,7 +119,6 @@ namespace Timestamps
                     
                 }
 
-                _End = null;
                 _Messages = null;
                 _Metadata = null;
                 _Disposed = true;

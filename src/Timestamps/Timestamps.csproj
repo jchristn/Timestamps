@@ -7,16 +7,14 @@
 		<Title>Simple class containing start time, end time, and total time.</Title>
 		<Authors>Joel Christner</Authors>
 		<Description>Simple class containing start time, end time, and total time.</Description>
-		<Copyright>(c)2023 Joel Christner</Copyright>
-		<Version>1.0.6</Version>
+		<Copyright>(c)2024 Joel Christner</Copyright>
+		<Version>1.0.8</Version>
 		<PackageProjectUrl>https://github.com/jchristn/timestamps</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/jchristn/timestamps</RepositoryUrl>
 		<RepositoryType>github</RepositoryType>
 		<PackageTags>time timestamp stopwatch</PackageTags>
 		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
-		<SignAssembly>True</SignAssembly>
-		<AssemblyOriginatorKeyFile>C:\Code\Misc\Timestamps\src\timestamps.snk</AssemblyOriginatorKeyFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
