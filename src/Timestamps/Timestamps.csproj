@@ -8,7 +8,7 @@
 		<Authors>Joel Christner</Authors>
 		<Description>Simple class containing start time, end time, and total time.</Description>
 		<Copyright>(c)2024 Joel Christner</Copyright>
-		<Version>1.0.8</Version>
+		<Version>1.0.9</Version>
 		<PackageProjectUrl>https://github.com/jchristn/timestamps</PackageProjectUrl>
 		<PackageIcon>logo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/jchristn/timestamps</RepositoryUrl>

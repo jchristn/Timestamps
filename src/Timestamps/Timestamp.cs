@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Timestamps
+﻿namespace Timestamps
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Object used to measure start, end, and total time associated with an operation.
     /// </summary>
@@ -47,7 +48,16 @@ namespace Timestamps
             {
                 lock (_Lock)
                 {
-                    return _Messages;
+                    return new Dictionary<DateTime, string>(_Messages).OrderBy(d => d.Key).ToDictionary(d => d.Key, d => d.Value);
+                }
+            }
+            set
+            {
+                if (value == null) value = new Dictionary<DateTime, string>();
+
+                lock (_Lock)
+                {
+                    _Messages = value;
                 }
             }
         }
