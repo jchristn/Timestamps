@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Timestamps</name>
+    </assembly>
+    <members>
+        <member name="T:Timestamps.Timestamp">
+            <summary>
+            Object used to measure start, end, and total time associated with an operation.
+            </summary>
+        </member>
+        <member name="P:Timestamps.Timestamp.Start">
+            <summary>
+            The time at which the operation started.  When instantiated, this is set to DateTime.UtcNow.
+            </summary>
+        </member>
+        <member name="P:Timestamps.Timestamp.End">
+            <summary>
+            The time at which the operation ended.
+            </summary>
+        </member>
+        <member name="P:Timestamps.Timestamp.TotalMs">
+            <summary>
+            The total number of milliseconds that transpired between Start and End.
+            </summary>
+        </member>
+        <member name="P:Timestamps.Timestamp.Messages">
+            <summary>
+            Log messages attached to the object by the user.
+            </summary>
+        </member>
+        <member name="P:Timestamps.Timestamp.Metadata">
+            <summary>
+            User-supplied metadata.
+            </summary>
+        </member>
+        <member name="M:Timestamps.Timestamp.#ctor">
+            <summary>
+            Instantiate.
+            </summary>
+        </member>
+        <member name="M:Timestamps.Timestamp.AddMessage(System.String)">
+            <summary>
+            Add a message.
+            </summary>
+            <param name="msg">Message.</param>
+        </member>
+        <member name="M:Timestamps.Timestamp.Dispose(System.Boolean)">
+            <summary>
+            Dispose.
+            </summary>
+            <param name="disposing">Disposing.</param>
+        </member>
+        <member name="M:Timestamps.Timestamp.Dispose">
+            <summary>
+            Dispose.
+            </summary>
+        </member>
+    </members>
+</doc>
