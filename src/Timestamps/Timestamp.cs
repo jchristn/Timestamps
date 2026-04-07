@@ -112,7 +112,10 @@
 
             lock (_Lock)
             {
-                _Messages.Add(DateTime.UtcNow, msg);
+                DateTime key = DateTime.UtcNow;
+                while (_Messages.ContainsKey(key))
+                    key = key.AddTicks(1);
+                _Messages.Add(key, msg);
             }
         }
 
