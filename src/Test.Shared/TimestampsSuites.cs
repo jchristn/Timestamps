@@ -171,6 +171,88 @@ namespace Test.Shared
                         if (ms == null || ms < 0)
                             throw new Exception($"TotalMs should be >= 0, got {ms}");
                         await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "TotalMs",
+                    caseId: "Deterministic",
+                    displayName: "TotalMs equals the exact span between fixed Start and End",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp
+                        {
+                            Start = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                            End = new DateTime(2024, 1, 1, 0, 0, 10, DateTimeKind.Utc)
+                        };
+
+                        double? ms = ts.TotalMs;
+                        if (ms != 10000.0)
+                            throw new Exception($"Expected exactly 10000ms, got {ms}");
+
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "TotalMs",
+                    caseId: "RoundsToTwoDecimals",
+                    displayName: "TotalMs rounds sub-millisecond durations to two decimals",
+                    executeAsync: async ct =>
+                    {
+                        // 12345 ticks = 1.2345 ms, which should round to 1.23.
+                        DateTime start = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                        Timestamp ts = new Timestamp
+                        {
+                            Start = start,
+                            End = start.AddTicks(12345)
+                        };
+
+                        double? ms = ts.TotalMs;
+                        if (ms != 1.23)
+                            throw new Exception($"Expected 1.23ms after rounding, got {ms}");
+
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "TotalMs",
+                    caseId: "NegativeWhenStartAfterEnd",
+                    displayName: "TotalMs is negative when Start is after End",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp
+                        {
+                            Start = new DateTime(2024, 1, 1, 0, 0, 10, DateTimeKind.Utc),
+                            End = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                        };
+
+                        double? ms = ts.TotalMs;
+                        if (ms != -10000.0)
+                            throw new Exception($"Expected -10000ms when Start is after End, got {ms}");
+
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "TotalMs",
+                    caseId: "NormalizesDateTimeKind",
+                    displayName: "TotalMs normalizes mixed DateTimeKind values to UTC",
+                    executeAsync: async ct =>
+                    {
+                        // Both endpoints are the same wall-clock instant expressed as Local,
+                        // five seconds apart. After ToUniversalTime() the offset cancels, so
+                        // the result must be exactly 5000ms regardless of the machine's zone.
+                        DateTime localStart = new DateTime(2024, 6, 1, 12, 0, 0, DateTimeKind.Local);
+                        Timestamp ts = new Timestamp
+                        {
+                            Start = localStart,
+                            End = localStart.AddSeconds(5)
+                        };
+
+                        double? ms = ts.TotalMs;
+                        if (ms != 5000.0)
+                            throw new Exception($"Expected 5000ms across Local timestamps, got {ms}");
+
+                        await Task.CompletedTask;
                     })
             };
 
@@ -389,6 +471,58 @@ namespace Test.Shared
 
                         if (ts.Messages == null || ts.Messages.Count != 0)
                             throw new Exception("Setting null should reset to empty dictionary");
+
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "Messages",
+                    caseId: "SortedOnGetWhenSetUnordered",
+                    displayName: "Getter returns messages sorted by key even when set out of order",
+                    executeAsync: async ct =>
+                    {
+                        DateTime t0 = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+                        // Insert keys out of chronological order.
+                        Dictionary<DateTime, string> unordered = new Dictionary<DateTime, string>
+                        {
+                            { t0.AddSeconds(3), "third" },
+                            { t0.AddSeconds(1), "first" },
+                            { t0.AddSeconds(2), "second" }
+                        };
+
+                        Timestamp ts = new Timestamp();
+                        ts.Messages = unordered;
+
+                        List<string> values = ts.Messages.Values.ToList();
+                        if (values.Count != 3
+                            || values[0] != "first"
+                            || values[1] != "second"
+                            || values[2] != "third")
+                            throw new Exception(
+                                "Getter should return values ordered by ascending key: "
+                                + string.Join(",", values));
+
+                        List<DateTime> keys = ts.Messages.Keys.ToList();
+                        for (int i = 1; i < keys.Count; i++)
+                            if (keys[i] < keys[i - 1])
+                                throw new Exception("Keys are not in ascending order");
+
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "Messages",
+                    caseId: "WhitespaceAccepted",
+                    displayName: "AddMessage accepts whitespace-only messages",
+                    executeAsync: async ct =>
+                    {
+                        // AddMessage only rejects null/empty; whitespace is a valid message.
+                        Timestamp ts = new Timestamp();
+                        ts.AddMessage("   ");
+
+                        if (ts.Messages.Count != 1 || ts.Messages.Values.First() != "   ")
+                            throw new Exception("Whitespace message should be stored verbatim");
 
                         await Task.CompletedTask;
                     })
