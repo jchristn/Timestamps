@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.13
+
+- Updated test dependencies: Touchstone.Core, Touchstone.Cli, Touchstone.XunitAdapter (0.1.12 -> 0.2.0), Microsoft.NET.Test.Sdk (18.9.0 -> 18.10.1)
+
 ## v1.0.12
 
 - Fixed duplicate key exception in `AddMessage` when called rapidly or from multiple threads

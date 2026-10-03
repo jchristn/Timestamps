@@ -8,11 +8,9 @@
 
 Timestamps provides a simple class that allows you to record start time, end time, and gather total runtime for a given operation. 
 
-## New in v1.0.12
+## New in v1.0.13
 
-- Fixed duplicate key exception when `AddMessage` is called rapidly or concurrently
-- Retargeted to net8.0 and net10.0
-- Added Touchstone-based test projects (Test.Shared, Test.Automated, Test.Xunit)
+- Updated test dependencies (Touchstone 0.2.0, Microsoft.NET.Test.Sdk 18.10.1)
 
 ## Help or Feedback
 
