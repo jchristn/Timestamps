@@ -27,16 +27,83 @@ namespace Test.Shared
                     TotalMsSuite(),
                     MessagesSuite(),
                     MetadataSuite(),
-                    DisposeSuite()
+                    DisposeSuite(),
+                    StopElapsedSuite(),
                 };
             }
         }
 
         /// <summary>
-        /// Tests for constructor and default state.
+        /// Tests for Stop and Elapsed.
         /// </summary>
-        public static TestSuiteDescriptor ConstructorSuite()
+        public static TestSuiteDescriptor StopElapsedSuite()
         {
+            List<TestCaseDescriptor> cases = new List<TestCaseDescriptor>
+            {
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "StopSetsEnd",
+                    displayName: "Stop sets End to UtcNow if not already set",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Stop();
+                        if (ts.End == null) throw new Exception("ts.End is null after Stop");
+                        if (ts.End.Value < ts.Start) throw new Exception("ts.End earlier than Start");
+                        await Task.CompletedTask;
+                    }),
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "SecondStopKeepsFirstEnd",
+                    displayName: "Second Stop keeps the first End value",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Stop();
+                        DateTime first = ts.End.Value;
+                        await Task.Delay(50, ct);
+                        ts.Stop();
+                        if (ts.End != first) throw new Exception($"ts.End changed: first={first:O}, second={ts.End.Value:O}");
+                    }),
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ElapsedNonNegative",
+                    displayName: "Elapsed is non-negative for new timestamp",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        TimeSpan e = ts.Elapsed;
+                        if (e < TimeSpan.Zero) throw new Exception("Elapsed negative for new timestamp");
+                    }),
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ElapsedGrowsBeforeStop",
+                    displayName: "Elapsed grows over time before Stop",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        TimeSpan e1 = ts.Elapsed;
+                        await Task.Delay(50, ct);
+                        TimeSpan e2 = ts.Elapsed;
+                        if ((e2 - e1).TotalMilliseconds < 40) throw new Exception("Elapsed did not grow sufficiently");
+                    }),
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ElapsedFixedAfterStop",
+                    displayName: "Elapsed remains constant after Stop",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Stop();
+                        TimeSpan e1 = ts.Elapsed;
+                        await Task.Delay(50, ct);
+                        TimeSpan e2 = ts.Elapsed;
+                        if (e1 != e2) throw new Exception("Elapsed changed after Stop");
+                    })
+            };
+            return new TestSuiteDescriptor(suiteId: "StopElapsed", displayName: "Stop and Elapsed", cases: cases);
+        }
+        
             List<TestCaseDescriptor> cases = new List<TestCaseDescriptor>
             {
                 new TestCaseDescriptor(

@@ -42,6 +42,23 @@ namespace Timestamps
 
 
         /// <summary>
+        /// The amount of time that transpired between Start and End.  If End is not set, the amount of time between Start and DateTime.UtcNow.
+        /// </summary>
+        public TimeSpan Elapsed
+        {
+            get
+            {
+                if (End == null)
+                {
+                    return DateTime.UtcNow - Start;
+                }
+                else
+                {
+                    return End.Value - Start;
+                }
+            }
+        }
+        /// <summary>
         /// Log messages attached to the object by the user.
         /// </summary>
         public Dictionary<DateTime, string> Messages
