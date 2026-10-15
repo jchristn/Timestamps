@@ -34,7 +34,10 @@ namespace Timestamps
                 }
                 else
                 {
+                    return Math.Round(TotalMsBetween(Start, End.Value), 2);
                 }
+                }
+                
             }
         }
 
