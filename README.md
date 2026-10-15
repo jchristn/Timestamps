@@ -27,6 +27,13 @@ void Main(string[] args)
   ts.End = DateTime.UtcNow.AddSeconds(10);
   Console.WriteLine("Total milliseconds: " + ts.TotalMs + "ms");
 
+  // stop and get elapsed time
+  Timestamp ts2 = new Timestamp();
+  // ... do work ...
+  ts2.Stop();          // sets End to DateTime.UtcNow; later calls keep the first End
+  TimeSpan elapsed = ts2.Elapsed;  // End - Start, or UtcNow - Start if not stopped
+  Console.WriteLine("Elapsed: " + elapsed.TotalMilliseconds + "ms");
+
   // add log messages
   ts.AddMessage("Hello, world!");
   ts.AddMessage("Hello, but a different world!");
@@ -36,6 +43,8 @@ void Main(string[] args)
   ts.Metadata = myObject; // anything you like
 }
 ```
+
+Stop() sets End to DateTime.UtcNow only if End is not already set, so repeat calls keep the first end time. Elapsed returns a TimeSpan of End - Start, or DateTime.UtcNow - Start while End is null, and it is fixed once stopped. Start and End are expected to be UTC values.
 
 ## Version History
 
