@@ -40,24 +40,6 @@
         }
 
         /// <summary>
-        /// The amount of time that transpired between Start and End.  If End is not set, the amount of time between Start and DateTime.UtcNow.
-        /// </summary>
-        public TimeSpan Elapsed
-        {
-            get
-            {
-                if (End == null)
-                {
-                    return DateTime.UtcNow - Start;
-                }
-                else
-                {
-                    return End.Value - Start;
-                }
-            }
-        }
-
-        /// <summary>
         /// Log messages attached to the object by the user.
         /// </summary>
         public Dictionary<DateTime, string> Messages
@@ -135,14 +117,6 @@
                     key = key.AddTicks(1);
                 _Messages.Add(key, msg);
             }
-        }
-
-        /// <summary>
-        /// Stop the timestamp by setting End to DateTime.UtcNow.  If End is already set, this method has no effect, so the first end time is retained.
-        /// </summary>
-        public void Stop()
-        {
-            if (End == null) End = DateTime.UtcNow;
         }
 
         /// <summary>
