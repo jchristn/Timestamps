@@ -1,4 +1,4 @@
-![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
+﻿![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
 
 # Timestamps
 
@@ -26,6 +26,7 @@ void Main(string[] args)
   ts.Start = DateTime.UtcNow;
   ts.End = DateTime.UtcNow.AddSeconds(10);
   Console.WriteLine("Total milliseconds: " + ts.TotalMs + "ms");
+
   // stop and get elapsed time
   Timestamp ts2 = new Timestamp();
   // ... do work ...
@@ -43,10 +44,8 @@ void Main(string[] args)
 }
 ```
 
+Stop() sets End to DateTime.UtcNow only if End is not already set, so repeat calls keep the first end time. Elapsed returns a TimeSpan of End - Start, or DateTime.UtcNow - Start while End is null, and it is fixed once stopped. Start and End are expected to be UTC values.
+
 ## Version History
-
-## Stop, Elapsed, and UTC
-
-Stop() sets End to DateTime.UtcNow only if End is not already set, so repeat calls keep the first end time. Elapsed returns a TimeSpan of End - Start, or UtcNow - Start while End is null. Elapsed is fixed once stopped. Start and End are expected to be UTC values.
 
 Please refer to CHANGELOG.md.

@@ -1,4 +1,4 @@
-namespace Timestamps
+﻿namespace Timestamps
 {
     using System;
     using System.Collections.Generic;
@@ -36,13 +36,8 @@ namespace Timestamps
                 {
                     return Math.Round(TotalMsBetween(Start, End.Value), 2);
                 }
-                }
-                
             }
         }
-
-
-
 
         /// <summary>
         /// The amount of time that transpired between Start and End.  If End is not set, the amount of time between Start and DateTime.UtcNow.
@@ -61,6 +56,7 @@ namespace Timestamps
                 }
             }
         }
+
         /// <summary>
         /// Log messages attached to the object by the user.
         /// </summary>
@@ -149,6 +145,10 @@ namespace Timestamps
             if (End == null) End = DateTime.UtcNow;
         }
 
+        /// <summary>
+        /// Dispose.
+        /// </summary>
+        /// <param name="disposing">Disposing.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_Disposed)
@@ -156,10 +156,6 @@ namespace Timestamps
                 if (disposing)
                 {
                     
-        // Removed incorrect Elapsed property from Dispose method
-
-
-        
                 }
 
                 _Messages = null;
