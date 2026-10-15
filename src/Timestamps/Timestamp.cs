@@ -34,23 +34,11 @@ namespace Timestamps
                 }
                 else
                 {
-        /// <summary>
-        /// The amount of time that transpired between Start and End.  If End is not set, the amount of time between Start and DateTime.UtcNow.
-        /// </summary>
-        public TimeSpan Elapsed
-        {
-            get
-            {
-                if (End == null)
-                {
-                    return DateTime.UtcNow - Start;
-                }
-                else
-                {
-                    return End.Value - Start;
                 }
             }
         }
+
+
 
 
         /// <summary>
