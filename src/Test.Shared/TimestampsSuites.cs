@@ -780,6 +780,30 @@ namespace Test.Shared
                         if (ts.Elapsed < TimeSpan.Zero || ts.Elapsed != ts.End.Value - ts.Start)
                             throw new Exception($"Expected Elapsed {ts.End.Value - ts.Start}, got {ts.Elapsed}");
                         await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ClearingEndMakesElapsedLiveAgain",
+                    displayName: "Clearing End makes Elapsed live again",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Start = DateTime.UtcNow.AddMinutes(-1);
+                        ts.End = ts.Start;
+                        if (ts.Elapsed != TimeSpan.Zero)
+                            throw new Exception($"Expected Elapsed zero while End is fixed, got {ts.Elapsed}");
+
+                        ts.End = null;
+
+                        await Task.Delay(50, ct);
+                        TimeSpan live = ts.Elapsed;
+
+                        if (live < TimeSpan.FromMilliseconds(40))
+                            throw new Exception($"Expected Elapsed >= 40 ms after clearing End, got {live}");
+                        if (live > TimeSpan.FromMinutes(2))
+                            throw new Exception($"Expected Elapsed around one minute after clearing End, got {live}");
+                        await Task.CompletedTask;
                     })
             };
 
