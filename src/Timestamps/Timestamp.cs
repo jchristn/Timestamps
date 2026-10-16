@@ -43,6 +43,7 @@
         /// The amount of time that has transpired between Start and End.
         /// While End is null, the value is live and measured against DateTime.UtcNow.
         /// Once End is set, the value is fixed at End minus Start.
+        /// If End is earlier than Start, the value is negative.
         /// </summary>
         public TimeSpan Elapsed
         {
