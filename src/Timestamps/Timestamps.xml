@@ -24,11 +24,6 @@
             The total number of milliseconds that transpired between Start and End.
             </summary>
         </member>
-        <member name="P:Timestamps.Timestamp.Elapsed">
-            <summary>
-            The amount of time that has elapsed between Start and End.  If End is not set, this is the time elapsed between Start and DateTime.UtcNow, and it continues to grow; once End is set, the value is fixed.
-            </summary>
-        </member>
         <member name="P:Timestamps.Timestamp.Messages">
             <summary>
             Log messages attached to the object by the user.
@@ -49,11 +44,6 @@
             Add a message.
             </summary>
             <param name="msg">Message.</param>
-        </member>
-        <member name="M:Timestamps.Timestamp.Stop">
-            <summary>
-            Stop the timer by setting End to DateTime.UtcNow.  If End is already set, this method does nothing, so the first end time is preserved.
-            </summary>
         </member>
         <member name="M:Timestamps.Timestamp.Dispose(System.Boolean)">
             <summary>
