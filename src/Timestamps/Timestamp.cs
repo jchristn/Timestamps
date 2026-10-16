@@ -1,4 +1,4 @@
-namespace Timestamps
+﻿namespace Timestamps
 {
     using System;
     using System.Collections.Generic;
@@ -155,7 +155,7 @@ namespace Timestamps
             {
                 if (disposing)
                 {
-                    
+
                 }
 
                 _Messages = null;

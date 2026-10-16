@@ -663,6 +663,7 @@ namespace Test.Shared
                         ts.Stop();
                         if (ts.End == null)
                             throw new Exception("Stop should set End to DateTime.UtcNow when End is null");
+                        await Task.CompletedTask;
                     }),
 
                 new TestCaseDescriptor(
@@ -678,6 +679,7 @@ namespace Test.Shared
                         ts.Stop();
                         if (ts.End.Value != first)
                             throw new Exception("Second Stop call should keep the first End value");
+                        await Task.CompletedTask;
                     }),
 
                 new TestCaseDescriptor(
@@ -693,6 +695,7 @@ namespace Test.Shared
                         ts.Stop();
                         if (ts.End.Value != manual)
                             throw new Exception("Stop should not change a manually set End value");
+                        await Task.CompletedTask;
                     }),
 
                 new TestCaseDescriptor(
@@ -704,6 +707,7 @@ namespace Test.Shared
                         Timestamp ts = new Timestamp();
                         if (ts.Elapsed < TimeSpan.Zero)
                             throw new Exception("Elapsed should be non-negative before Stop is called");
+                        await Task.CompletedTask;
                     }),
 
                 new TestCaseDescriptor(
@@ -718,6 +722,7 @@ namespace Test.Shared
                         TimeSpan second = ts.Elapsed;
                         if (second <= first || (second - first).TotalMilliseconds < 40)
                             throw new Exception("Elapsed should grow continuously before Stop is called");
+                        await Task.CompletedTask;
                     }),
 
                 new TestCaseDescriptor(
@@ -733,6 +738,7 @@ namespace Test.Shared
                         TimeSpan second = ts.Elapsed;
                         if (first != second)
                             throw new Exception("Elapsed should be fixed after Stop is called");
+                        await Task.CompletedTask;
                     }),
 
                 new TestCaseDescriptor(
@@ -746,6 +752,7 @@ namespace Test.Shared
                         ts.End = ts.Start.AddMilliseconds(1500);
                         if (ts.Elapsed != TimeSpan.FromMilliseconds(1500))
                             throw new Exception("Elapsed should equal End minus Start");
+                        await Task.CompletedTask;
                     })
             };
 
