@@ -1,4 +1,4 @@
-﻿![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
+![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
 
 # Timestamps
 
@@ -36,6 +36,22 @@ void Main(string[] args)
   ts.Metadata = myObject; // anything you like
 }
 ```
+
+## Stop and Elapsed
+```csharp
+using Timestamps;
+
+Timestamp ts = new Timestamp();
+// do some work
+TimeSpan soFar = ts.Elapsed;  // live: grows until End is set
+ts.Stop();                    // sets End to DateTime.UtcNow
+ts.Stop();                    // no effect, the first Stop() wins
+TimeSpan total = ts.Elapsed;  // fixed: End - Start
+```
+
+- `Stop()` sets `End` to `DateTime.UtcNow` only if `End` is not already set. Calling it again, or calling it after setting `End` manually, keeps the existing `End`.
+- `Elapsed` is a read-only `TimeSpan`. It returns `End - Start` once `End` is set, and `DateTime.UtcNow - Start` before that, so it is live until the timestamp is stopped. Setting `End = null` makes it live again.
+- `Elapsed` is not rounded and does not convert values to UTC, so it may differ slightly from `TotalMs`. Use UTC values (`DateTime.UtcNow`) for `Start` and `End`.
 
 ## Version History
 
