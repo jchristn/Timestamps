@@ -37,6 +37,19 @@ void Main(string[] args)
 }
 ```
 
+## Stop and Elapsed
+
+Call `Stop()` to set `End` to the current UTC time. Only the first call takes effect; if `End` is already set, `Stop()` leaves it unchanged. `Elapsed` returns a `TimeSpan`: while `End` is not set it is measured live against `DateTime.UtcNow`, and once `End` is set it is fixed at `End - Start`. Unlike `TotalMs`, `Elapsed` is not rounded.
+
+```csharp
+Timestamp ts = new Timestamp();
+Console.WriteLine("Running: " + ts.Elapsed);   // live, keeps growing
+
+ts.Stop();                                      // sets End
+ts.Stop();                                      // no effect, first End is kept
+Console.WriteLine("Elapsed: " + ts.Elapsed.TotalMilliseconds + "ms");  // fixed value
+```
+
 ## Version History
 
 Please refer to CHANGELOG.md.
