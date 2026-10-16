@@ -27,7 +27,8 @@ namespace Test.Shared
                     TotalMsSuite(),
                     MessagesSuite(),
                     MetadataSuite(),
-                    DisposeSuite()
+                    DisposeSuite(),
+                    StopElapsedSuite()
                 };
             }
         }
@@ -642,6 +643,173 @@ namespace Test.Shared
             return new TestSuiteDescriptor(
                 suiteId: "Dispose",
                 displayName: "Dispose Behavior",
+                cases: cases);
+        }
+
+        /// <summary>
+        /// Tests for Stop and Elapsed behavior.
+        /// </summary>
+        public static TestSuiteDescriptor StopElapsedSuite()
+        {
+            List<TestCaseDescriptor> cases = new List<TestCaseDescriptor>
+            {
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "StopSetsEnd",
+                    displayName: "Stop sets End to the current time",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        if (ts.End != null)
+                            throw new Exception("Expected End to be null before Stop");
+
+                        ts.Stop();
+
+                        if (ts.End == null)
+                            throw new Exception("Expected End to be set after Stop");
+                        if (ts.End.Value < ts.Start || ts.End.Value > DateTime.UtcNow)
+                            throw new Exception($"Expected End between Start and now, got {ts.End}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "SecondStopKeepsFirstEnd",
+                    displayName: "A second Stop keeps the first end time",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Stop();
+                        DateTime first = ts.End.Value;
+
+                        await Task.Delay(50, ct);
+                        ts.Stop();
+
+                        if (ts.End.Value != first)
+                            throw new Exception($"Expected End {first} after second Stop, got {ts.End}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "StopKeepsManualEnd",
+                    displayName: "Stop does not modify a manually set End",
+                    executeAsync: async ct =>
+                    {
+                        DateTime manual = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                        Timestamp ts = new Timestamp();
+                        ts.Start = manual.AddSeconds(-5);
+                        ts.End = manual;
+
+                        ts.Stop();
+
+                        if (ts.End != manual)
+                            throw new Exception($"Expected End {manual} after Stop, got {ts.End}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ElapsedGrowsBeforeStop",
+                    displayName: "Elapsed grows while End is null",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        TimeSpan first = ts.Elapsed;
+                        if (first < TimeSpan.Zero)
+                            throw new Exception($"Expected Elapsed >= zero, got {first}");
+
+                        await Task.Delay(50, ct);
+                        TimeSpan second = ts.Elapsed;
+
+                        if (second <= first)
+                            throw new Exception($"Expected Elapsed to grow, got {first} then {second}");
+                        if (second < TimeSpan.FromMilliseconds(40))
+                            throw new Exception($"Expected Elapsed >= 40 ms, got {second}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ElapsedFixedAfterStop",
+                    displayName: "Elapsed is fixed after Stop",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        await Task.Delay(50, ct);
+                        ts.Stop();
+                        TimeSpan first = ts.Elapsed;
+
+                        await Task.Delay(50, ct);
+                        TimeSpan second = ts.Elapsed;
+
+                        if (first != second)
+                            throw new Exception($"Expected Elapsed to be fixed, got {first} then {second}");
+                        if (first != ts.End.Value - ts.Start)
+                            throw new Exception($"Expected Elapsed {ts.End.Value - ts.Start}, got {first}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ElapsedExactWithFixedStartEnd",
+                    displayName: "Elapsed is exact for fixed Start and End",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Start = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                        ts.End = ts.Start.AddMilliseconds(1500);
+
+                        if (ts.Elapsed != TimeSpan.FromMilliseconds(1500))
+                            throw new Exception($"Expected Elapsed 00:00:01.5000000, got {ts.Elapsed}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "WorksAfterDispose",
+                    displayName: "Stop and Elapsed work after Dispose",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Dispose();
+                        ts.Stop();
+
+                        if (ts.End == null)
+                            throw new Exception("Expected End to be set after Stop");
+                        if (ts.Elapsed < TimeSpan.Zero || ts.Elapsed != ts.End.Value - ts.Start)
+                            throw new Exception($"Expected Elapsed {ts.End.Value - ts.Start}, got {ts.Elapsed}");
+                        await Task.CompletedTask;
+                    }),
+
+                new TestCaseDescriptor(
+                    suiteId: "StopElapsed",
+                    caseId: "ClearingEndMakesElapsedLiveAgain",
+                    displayName: "Clearing End makes Elapsed live again",
+                    executeAsync: async ct =>
+                    {
+                        Timestamp ts = new Timestamp();
+                        ts.Start = DateTime.UtcNow.AddMinutes(-1);
+                        ts.End = ts.Start;
+                        if (ts.Elapsed != TimeSpan.Zero)
+                            throw new Exception($"Expected Elapsed zero while End is fixed, got {ts.Elapsed}");
+
+                        ts.End = null;
+
+                        await Task.Delay(50, ct);
+                        TimeSpan live = ts.Elapsed;
+
+                        if (live < TimeSpan.FromMilliseconds(40))
+                            throw new Exception($"Expected Elapsed >= 40 ms after clearing End, got {live}");
+                        if (live > TimeSpan.FromMinutes(2))
+                            throw new Exception($"Expected Elapsed around one minute after clearing End, got {live}");
+                        await Task.CompletedTask;
+                    })
+            };
+
+            return new TestSuiteDescriptor(
+                suiteId: "StopElapsed",
+                displayName: "Stop and Elapsed Behavior",
                 cases: cases);
         }
     }
