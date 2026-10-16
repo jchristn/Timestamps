@@ -1,4 +1,4 @@
-![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
+﻿![timestamps](https://raw.githubusercontent.com/jchristn/Timestamps/main/Assets/logo.ico)
 
 # Timestamps
 
