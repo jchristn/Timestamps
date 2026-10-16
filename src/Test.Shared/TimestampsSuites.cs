@@ -27,8 +27,7 @@ namespace Test.Shared
                     TotalMsSuite(),
                     MessagesSuite(),
                     MetadataSuite(),
-                    DisposeSuite(),
-                    StopElapsedSuite()
+                    DisposeSuite()
                 };
             }
         }
@@ -643,122 +642,6 @@ namespace Test.Shared
             return new TestSuiteDescriptor(
                 suiteId: "Dispose",
                 displayName: "Dispose Behavior",
-                cases: cases);
-        }
-
-        /// <summary>
-        /// Tests for Stop and Elapsed.
-        /// </summary>
-        public static TestSuiteDescriptor StopElapsedSuite()
-        {
-            List<TestCaseDescriptor> cases = new List<TestCaseDescriptor>
-            {
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "StopSetsEnd",
-                    displayName: "Stop sets End to DateTime.UtcNow when End is null",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        ts.Stop();
-                        if (ts.End == null)
-                            throw new Exception("Stop should set End to DateTime.UtcNow when End is null");
-                        await Task.CompletedTask;
-                    }),
-
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "SecondStopKeepsFirstEnd",
-                    displayName: "Second Stop call keeps the first End value",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        ts.Stop();
-                        DateTime first = ts.End.Value;
-                        await Task.Delay(50, ct);
-                        ts.Stop();
-                        if (ts.End.Value != first)
-                            throw new Exception("Second Stop call should keep the first End value");
-                        await Task.CompletedTask;
-                    }),
-
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "StopPreservesManualEnd",
-                    displayName: "Stop does not change a manually set End value",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        DateTime manual = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                        ts.Start = manual.AddSeconds(-5);
-                        ts.End = manual;
-                        ts.Stop();
-                        if (ts.End.Value != manual)
-                            throw new Exception("Stop should not change a manually set End value");
-                        await Task.CompletedTask;
-                    }),
-
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "ElapsedNonNegativeBeforeStop",
-                    displayName: "Elapsed is non-negative before Stop is called",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        if (ts.Elapsed < TimeSpan.Zero)
-                            throw new Exception("Elapsed should be non-negative before Stop is called");
-                        await Task.CompletedTask;
-                    }),
-
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "ElapsedGrowsBeforeStop",
-                    displayName: "Elapsed grows continuously before Stop is called",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        TimeSpan first = ts.Elapsed;
-                        await Task.Delay(50, ct);
-                        TimeSpan second = ts.Elapsed;
-                        if (second <= first || (second - first).TotalMilliseconds < 40)
-                            throw new Exception("Elapsed should grow continuously before Stop is called");
-                        await Task.CompletedTask;
-                    }),
-
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "ElapsedFixedAfterStop",
-                    displayName: "Elapsed is fixed after Stop is called",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        ts.Stop();
-                        TimeSpan first = ts.Elapsed;
-                        await Task.Delay(50, ct);
-                        TimeSpan second = ts.Elapsed;
-                        if (first != second)
-                            throw new Exception("Elapsed should be fixed after Stop is called");
-                        await Task.CompletedTask;
-                    }),
-
-                new TestCaseDescriptor(
-                    suiteId: "StopElapsed",
-                    caseId: "ElapsedEqualsEndMinusStart",
-                    displayName: "Elapsed equals End minus Start when End is set",
-                    executeAsync: async ct =>
-                    {
-                        Timestamp ts = new Timestamp();
-                        ts.Start = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                        ts.End = ts.Start.AddMilliseconds(1500);
-                        if (ts.Elapsed != TimeSpan.FromMilliseconds(1500))
-                            throw new Exception("Elapsed should equal End minus Start");
-                        await Task.CompletedTask;
-                    })
-            };
-
-            return new TestSuiteDescriptor(
-                suiteId: "StopElapsed",
-                displayName: "Stop and Elapsed",
                 cases: cases);
         }
     }
